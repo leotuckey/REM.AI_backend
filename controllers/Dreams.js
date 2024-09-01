@@ -11,7 +11,7 @@ const config = new Configuration({
 
 const openai = new OpenAIApi(config);
 
-const checkPremiumStatus = async () => {
+const checkPremiumStatus = async () => { //interpretation is only available to users who are paying for a premium membership.
     const userId = req.user.userId;
     const specificDreamAccount = await dreamAccounts.findById(userId)
     return specificDreamAccount.premium
