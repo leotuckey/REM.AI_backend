@@ -132,13 +132,21 @@ const updateDream = async (req, res) => {
         user: { userId },
         params: { date: dreamDate, number: dreamNumber },
     } = req
-
+    const parsedAnalysis = await runPrompt(req.body)
     if (description === '') {
         throw new BadRequestError('The dream description cannot be empty')
     }
     const dream = await Dream.findOneAndUpdate(
         { date: dreamDate, createdBy: userId, number: dreamNumber },
-        { description: req.body },
+        {
+            description: req.body,
+            "analysis.emotions": parsedAnalysis.emotions,
+            "analysis.themes": parsedAnalysis.themes,
+            "analysis.people": parsedAnalysis.people,
+            "analysis.locations": parsedAnalysis.locations,
+            "analysis.keywords": parsedAnalysis.keywords,
+            "analysis.interpretation": parsedAnalysis.interpretation
+        },
         { new: true, runValidators: true }
     )
     if (!dream) {
